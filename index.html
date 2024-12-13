@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>FRU</title>
+    <style>
+        /* 既存のスタイル */
+
+        .line {
+            display: flex; /* 横並びにするためにflexを使用 */
+            align-items: center; /* 垂直方向の中央揃え */
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+            font-size: 18px;
+            height: 80px; /* 行の高さを固定（画像サイズに合わせて調整） */
+            box-sizing: border-box; /* パディングを含めた高さを設定 */
+            overflow: hidden; /* はみ出す要素を隠す */
+            cursor: move; /* 並べ替え可能であることを示す */
+        }
+        /* 画像とラベルを含むコンテナのスタイル */
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 中央揃え */
+            margin-left: 10px;
+            width: 30px; /* 画像とラベルのコンテナ幅を調整 */
+        }
+        .image-container img {
+            width: 40px; /* 画像の幅を大きく */
+            height: 40px; /* 画像の高さを大きく */
+            object-fit: contain; /* 画像の縦横比を維持 */
+            cursor: pointer; /* クリック可能であることを示す */
+        }
+        .image-container .label {
+            font-size: 14px; /* ラベルのフォントサイズを調整 */
+            margin-top: 4px;
+            height: 18px; /* ラベルの高さを固定 */
+            line-height: 18px;
+            text-align: center; /* 中央揃え */
+            width: 100%; /* ラベルをコンテナ幅に合わせる */
+        }
+        /* アニメーションの定義 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .f-image-added, .b-image-added, .R-image-added, .W-image-added, .E-image-added, .S-image-added, .H-image-added {
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        /* ヘッダーのスタイル */
+        .header {
+            width: 40%;
+            text-align: center; /* 中央揃え */
+            padding: 20px 0; /* 上下のパディング */
+            background-color: #f8f8f8; /* 背景色（必要に応じて変更） */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 下に影を追加 */
+            margin-bottom: 20px; /* 下のコンテンツとの間隔 */
+            cursor: pointer; /* クリック可能であることを示す */
+        }
+        .header img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ボタンのスタイル */
+        #executeButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #timeCrystalButton {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+
+        /* メディアクエリでレスポンシブ対応 */
+        @media (max-width: 600px) {
+            .line {
+                font-size: 16px; /* フォントサイズを少し小さく */
+                height: 90px; /* 行の高さを少し大きく */
+            }
+            .image-container {
+                width: 50px; /* コンテナ幅を調整 */
+                margin-left: 5px; /* マージンを調整 */
+            }
+            .image-container img {
+                width: 30px; /* 画像の幅を小さく */
+                height: 30px; /* 画像の高さを小さく */
+            }
+            .image-container .label {
+                font-size: 12px; /* ラベルのフォントサイズを小さく */
+                height: 16px; /* ラベルの高さを調整 */
+                line-height: 16px;
+            }
+            #executeButton {
+                font-size: 14px; /* ボタンのフォントサイズを小さく */
+                padding: 8px 16px; /* ボタンのパディングを調整 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダーの追加 -->
+    <div class="header" id="header">
+        <img src="images/kasyki.png" alt="Kasyki Header">
+    </div>
+
+    <!-- 並べ替え対象のコンテナを追加 -->
+    <div id="linesContainer">
+        <div id="line1" class="line" data-group="TH">
+            <img src="images/1.png" alt="f.webp for line1" data-original="1.png" data-alternate="e1.png" id="image1">
+        </div>
+        <div id="line2" class="line" data-group="TH">
+            <img src="images/2.png" alt="f.webp for line2" data-original="2.png" data-alternate="e2.png" id="image2">
+        </div>
+        <div id="line7" class="line" data-group="TH">
+            <img src="images/7.png" alt="f.webp for line7" data-original="7.png" data-alternate="e7.png" id="image7">
+        </div>
+        <div id="line8" class="line" data-group="TH">
+            <img src="images/8.png" alt="f.webp for line8" data-original="8.png" data-alternate="e8.png" id="image8">
+        </div>
+        <div id="line3" class="line" data-group="DPS">
+            <img src="images/3.png" alt="b.webp for line3" data-original="3.png" data-alternate="e3.png" id="image3">
+        </div>
+        <div id="line4" class="line" data-group="DPS">
+            <img src="images/4.png" alt="b.webp for line4" data-original="4.png" data-alternate="e4.png" id="image4">
+        </div>
+        <div id="line5" class="line" data-group="DPS">
+            <img src="images/5.png" alt="b.webp for line5" data-original="5.png" data-alternate="e5.png" id="image5">
+        </div>
+        <div id="line6" class="line" data-group="DPS">
+            <img src="images/6.png" alt="b.webp for line6" data-original="6.png" data-alternate="e6.png" id="image6">
+        </div>
+    </div>
+
+    <!-- 時間圧縮 -->
+    <button id="executeButton">時間圧縮</button>
+
+    <!-- 時間結晶 -->
+    <button id="timeCrystalButton">時間結晶</button>
+
+    <!-- SortableJSのCDNを追加 -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
